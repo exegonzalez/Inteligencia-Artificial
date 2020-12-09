@@ -1,0 +1,56 @@
+h: nos indica en cual renglón vamos a poner la reina
+d: digonal derecha (135°)
+i: digonal izquierda (45°)
+v: vector que representa las columnas [1..8]
+r: vector guarda la solucion actual [1..8]
+di: vector que representa la diagonal izquierda [1..15]
+dd: vector que representa la diagonal derecha [1..15]
+sol: matriz [1..92,1..8]
+
+procedure reinas(h)
+    var d, i, j, k: entero
+
+    para j desde 1 hasta 8 hacer
+        d := j+h-1; i := 8+j-h
+
+        % si las posiciones de los vectores estan en 0
+        % significa que tanto las columnas como las diagonales no presentan
+        si (v[j]=0) y (di[i]=0) y (dd[d]=0) entonces
+
+            % guardamos en las posiciones correspondientes 
+            % de los vectores de (columas, diagonal derecha e izquierda)
+            % las filas donde se coloca la reina y 
+            % en el vector de solucion actual guardamos la columa donde esta
+            % ubicada la reina
+            v[j] := h; di[i] := h; dd[d] := h; r[h] := j;
+            
+            % si la reina esta en la fila 8
+            % significa que se encontro una solucion prometedora
+            Si (h=8) entonces
+
+                % incrementa el vector de soluciones en uno
+                inc(s)
+
+                para k desde 1 hasta 8 hacer
+
+                % guardamos la solucion en la matriz de soluciones
+                sol[s,k] := r[k]
+            fin si                
+            
+            % llamada recursiva
+            sino 
+                reinas(h+1)
+        
+        v[j] := 0; di[i] := 0; dd[d] := 0;
+        fin si
+    fin para
+fin procedure
+
+
+En las primeras cinco líneas de código tenemos la declaración de variables. Para los ciclos utilizamos las variables i, j y k, s para llevar la cuenta de las soluciones, m y n para saber la posición de la reina que está fija, y t para leer el número de casos. Para saber cuales posiciones están en ataque, en lugar de utilizar un matriz para representar el tablero, vamos a utilizar tres arreglos (v, di, dd) para saber si las columnas o las diagonales están en ataque. En el arreglo r guardamos la solución actual y en sol todas las soluciones.
+Las soluciones las generamos en el procedimiento reinas (líneas 7 a 25). Tenemos como parámetro h, que nos indica en cual renglón vamos a poner la reina. Como ponemos una reina por renglón, el número de renglón también nos indica cuantas reinas ya colocamos. Para cada una de las casillas en este renglón (línea 10), intentamos poner la reina con la condición de que no sea atacada por las anteriores (línea 13). Para saber cuales diagonales están siendo atacadas, utilizamos las variables d e i (línea 12) para las dos diagonales y j para las columnas.
+
+Sabiendo que la casilla no está siendo atacada, ponemos a la reina actual ahí. Esto lo hacemos anotando la reina que estamos utilizando en los valores de las diagonales y la columna, y guardando este valor en la solución actual (línea 15). Para el uso que les estamos dando, los arreglos v, di, dd pudieran ser booleanos, pero saber que reina está atacando estas posiciones pudiera ser interesante en otros problemas.
+
+Si ya colocamos todas las reinas, guardamos la solución actual (líneas 16 a 20); en caso de que todavía falten, ponemos la siguiente (línea 21). Al regresar de la recursividad, quitamos los valores que habíamos asignado (línea 22). No borramos el valor de la solución (r[h]), ya que no lo usamos para saber si una reina se puede poner, y al momento de agregar otra, este valor será sobrescrito. Contando las veces que se llama esta función, podemos ver como al revisar antes de poner a las reinas reducimos la cantidad de vértices visitados de 88 a sólo 1965.
+Entre las líneas 27 y 54 tenemos la parte principal del código. Empezamos inicializando las variables (líneas 28 a 31) y mandamos precalcular las soluciones (línea 32). Después leemos la cantidad de casos (línea 35). Para cada caso, leemos la reina que ya está colocada (línea 38), y escribimos las líneas de formato que nos pidieron (líneas 39 a 41). En seguida, buscamos todas las soluciones que tienen un reina en la casilla m, n y las escribimos (líneas 43 a 51). Terminamos escribiendo la línea en blanco que separa a todos los casos (línea 52).
